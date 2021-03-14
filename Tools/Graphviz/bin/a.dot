@@ -1,0 +1,8 @@
+digraph {
+    bgcolor="#EEEEEE";
+    0[shape="ellipse", color="red", label="
+from requests import get
+\n
+'\ndef fetch(url):\n    response = get(url)\n    \n"];
+    node [shape="box"];
+}
