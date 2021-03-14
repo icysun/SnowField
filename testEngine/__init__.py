@@ -1,4 +1,4 @@
-from staticfg import CFGBuilder
+from cfgEngine import CFGBuilder
 
 def unitTest():
     testid = 0
