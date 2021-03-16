@@ -8,6 +8,7 @@ Control flow graph builder.
 import ast
 from .model import Block, Link, CFG
 import sys
+from logEngine.consoleLog import logProcess, logStatus, logFunc
 
 
 def is_py38_or_higher():
@@ -126,8 +127,13 @@ class CFGBuilder(ast.NodeVisitor):
         Returns:
             The CFG produced from the source code.
         """
+        logProcess("正在解析抽象语法树")
         tree = ast.parse(src, mode='exec')
-        return self.build(name, tree)
+        logStatus("完成")
+        logProcess("开始构建控制流图")
+        cfg = self.build(name, tree)
+        logStatus("完成")
+        return cfg
 
     def build_from_file(self, name, filepath):
         """
@@ -291,6 +297,7 @@ class CFGBuilder(ast.NodeVisitor):
 
         func = node.func
         func_name = visit_func(func)
+        logFunc(func_name)
         self.current_block.func_calls.append(func_name)
 
     def visit_Assign(self, node):

@@ -1,4 +1,4 @@
-from testEngine import unitTest
+from testEngine.unitTest import unitTest
 
 if __name__ == "__main__":
-    unitTest()
+    unitTest(1)

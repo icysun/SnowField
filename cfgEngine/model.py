@@ -206,7 +206,7 @@ class CFG(object):
 
         return graph
 
-    def build_visual(self, filepath, format, calls=True, show=True):
+    def build_visual(self, filepath, format='png', calls=True, show=True):
         """
         Build a visualisation of the CFG with graphviz and output it in a DOT
         file.
