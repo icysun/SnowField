@@ -1,4 +1,5 @@
 import time
+from astpretty import pprint
 
 def getTime():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -14,3 +15,8 @@ def logFuncCall(info : str):
 
 def logFuncImport(funcId : str, description : str):
     print("[*] {} Import function: {}, \"{}\"".format(getTime(), funcId, description))
+
+def logStatement(statement):
+    print('-----------')
+    pprint(statement)
+    print('-----------')

@@ -8,7 +8,7 @@ Control flow graph builder.
 import ast
 from .model import Block, Link, CFG
 import sys
-from logEngine.consoleLog import logProcess, logStatus, logFuncCall
+from logEngine.consoleLog import logProcess, logStatus, logFuncCall, logStatement
 
 
 def is_py38_or_higher():
