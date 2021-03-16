@@ -19,4 +19,3 @@ def logFuncImport(funcId : str, description : str):
 def logStatement(statement):
     print('-----------')
     pprint(statement)
-    print('-----------')

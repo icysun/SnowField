@@ -1,9 +1,10 @@
-from cfgEngine import CFGBuilder
+from cfgEngine import CFGBuilder, Block, Link, CFG
 from moduleEngine.importData import importFuncs
+
 
 class Scanner():
 
-    def __init__(self, name ,code):
+    def __init__(self, name, code):
         self.name = name
         self.code = code
         self.cfg = None
@@ -25,6 +26,7 @@ class Scanner():
         for modulePath in self.modulePath:
             self.taintedFuncs, self.taintSources, self.sinkFuncs = importFuncs(modulePath)
 
-    def analyze(self, currentBlock):
-        for i in currentBlock.func_calls:
-            print(i)
+    def analyze(self, currentBlock: Block):
+        for func_call in currentBlock.func_calls:
+            if func_call in self.taintedFuncs:
+                self.trace(func_call.args)
