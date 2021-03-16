@@ -8,7 +8,7 @@ Control flow graph builder.
 import ast
 from .model import Block, Link, CFG
 import sys
-from logEngine.consoleLog import logProcess, logStatus, logFunc
+from logEngine.consoleLog import logProcess, logStatus, logFuncCall
 
 
 def is_py38_or_higher():
@@ -297,7 +297,7 @@ class CFGBuilder(ast.NodeVisitor):
 
         func = node.func
         func_name = visit_func(func)
-        logFunc(func_name)
+        logFuncCall(func_name)
         self.current_block.func_calls.append(func_name)
 
     def visit_Assign(self, node):

@@ -9,5 +9,8 @@ def logProcess(info : str):
 def logStatus(info : str):
     print("[-] {} {}".format(getTime(), info))
 
-def logFunc(info : str):
+def logFuncCall(info : str):
     print("[*] {} Call function: {}".format(getTime(), info))
+
+def logFuncImport(funcId : str, description : str):
+    print("[*] {} Import function: {}, \"{}\"".format(getTime(), funcId, description))
