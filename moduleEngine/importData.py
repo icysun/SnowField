@@ -8,7 +8,7 @@ def importFuncs(modulePath: str):
         funcName, info = func, taintedFuncs[func]
         funcId = modulePath + '/' + funcName
         description = info['description']
-        taintedFuncData[funcId] = {'funcName': funcName, description: description}
+        taintedFuncData[funcName] = {'funcId': funcId, 'description': description}
         logFuncImport(funcId, description)
     taintSourceData = {}
     taintSources = loads(open('./moduleEngine/{}/taintSource.json'.format(modulePath), encoding="utf8").read())
@@ -17,7 +17,7 @@ def importFuncs(modulePath: str):
         funcId = modulePath + '/' + funcName
         description = info['description']
         logFuncImport(funcId, description)
-        taintSourceData[funcId] = {'funcName': funcName, description: description}
+        taintSourceData[funcName] = {'funcId': funcId, 'description': description}
     sinkFuncData = {}
     sinkFuncs = loads(open('./moduleEngine/{}/sinkFunc.json'.format(modulePath), encoding="utf8").read())
     for func in sinkFuncs:
@@ -25,5 +25,5 @@ def importFuncs(modulePath: str):
         funcId = modulePath + '/' + funcName
         description = info['description']
         logFuncImport(funcId, description)
-        taintSourceData[funcId] = {'funcName': funcName, description: description}
+        taintSourceData[funcName] = {'funcId': funcId, 'description': description}
     return taintedFuncData, taintSourceData, sinkFuncData

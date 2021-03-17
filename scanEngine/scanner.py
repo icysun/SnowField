@@ -1,6 +1,7 @@
 from cfgEngine import CFGBuilder, Block, Link, CFG
 from moduleEngine.importData import importFuncs
-
+from logEngine.consoleLog import logScanResult
+import ast
 
 class Scanner():
 
@@ -28,5 +29,14 @@ class Scanner():
 
     def analyze(self, currentBlock: Block):
         for func_call in currentBlock.func_calls:
-            if func_call in self.taintedFuncs:
-                self.trace(func_call.args)
+            if func_call in self.taintedFuncs.keys():
+                self.trace(currentBlock, func_call, currentBlock.func_calls[func_call]['args'])
+
+    def trace(self, currentBlock, func_call, args):
+        for statement in currentBlock.statements[::-1]:
+            if type(statement) == ast.Assign:
+                if statement.targets[0].id in args:
+                    if type(statement.value) == ast.Call:
+                        funcName = statement.value.func.id
+                        if funcName in self.taintSources:
+                            logScanResult(self.taintedFuncs[func_call]['description'])

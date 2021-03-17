@@ -1,5 +1,5 @@
 {
   "exec": {
-    "description": "执行代码，可能导致命令执行漏洞"
+    "description": "命令注入漏洞"
   }
 }

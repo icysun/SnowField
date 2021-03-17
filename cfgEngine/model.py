@@ -27,7 +27,7 @@ class Block(object):
         self.statements = []
         # Calls to functions inside the block (represents context switches to
         # some functions' CFGs).
-        self.func_calls = []
+        self.func_calls = {}
         # Links to predecessors in a control flow graph.
         self.predecessors = []
         # Links to the next blocks in a control flow graph.

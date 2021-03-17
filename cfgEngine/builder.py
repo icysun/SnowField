@@ -295,10 +295,20 @@ class CFGBuilder(ast.NodeVisitor):
             elif type(node) == ast.Subscript:
                 return node.value.id
 
-        func = node.func
-        func_name = visit_func(func)
-        logFuncCall(func_name)
-        self.current_block.func_calls.append(func_name)
+        def visit_finc_args(args):
+            for arg in args:
+                if type(arg) == ast.Constant:
+                    pass
+                elif type(arg) == ast.Name:
+                    yield arg.id
+
+        def getModulePath():
+            return 'builtin'
+
+        func_name = visit_func(node.func)
+        func_args = list(visit_finc_args(node.args))
+        modulePath = getModulePath()
+        self.current_block.func_calls[func_name] = {'args':func_args, 'funcId':modulePath + '/' + func_name}
 
     def visit_Assign(self, node):
         self.add_statement(self.current_block, node)
