@@ -35,7 +35,7 @@ class Block(object):
 
     def __str__(self):
         if self.statements:
-            return "block:{}@{}".format(self.id, self.at())
+            return "block{}@第{}行:{}".format(self.id, self.at(),self.get_source().replace('\n','\\n'))
         return "empty block:{}".format(self.id)
 
     def __repr__(self):
@@ -105,9 +105,9 @@ class Link(object):
     control jump is made.
     """
 
-    __slots__ = ["source", "target", "exitcase"]
+    __slots__ = ["source", "target", "exitcase", "isLoopBack"]
 
-    def __init__(self, source, target, exitcase=None):
+    def __init__(self, source, target, exitcase=None, isLoopBack = False):
         assert type(source) == Block, "Source of a link must be a block"
         assert type(target) == Block, "Target of a link must be a block"
         # Block from which the control flow jump was made.
@@ -116,6 +116,7 @@ class Link(object):
         self.target = target
         # 'Case' leading to a control flow jump through this link.
         self.exitcase = exitcase
+        self.isLoopBack = isLoopBack
 
     def __str__(self):
         return "link from {} to {}".format(str(self.source), str(self.target))

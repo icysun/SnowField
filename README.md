@@ -7,6 +7,8 @@
 ▀▄▄▄█▀ █   █  ▀█▄█▀   █ █   █      ▄▄█▄▄    ▀▄▄  ▀█▄▄▀  ▀█▄██  雪原：Python代码静态漏洞扫描器
 ```
 
+![image-20210327143459010](C:\Users\Acer\Desktop\SnowField\README.assets\image-20210327143459010.png)
+
 ## 扫描器结构设计
 
 扫描器由六个组件构成：
@@ -59,4 +61,75 @@ functioncfgs: 控制流图的子图（调用的函数的控制流图，这样设
 ```
 
 ### 构建方法
+
+#### AST node的处理：
+
+#### 递归构建：
+
+- function-subCFG
+- file-subCFG
+- package-subCFG
+
+#### 分割基本块：
+
+
+
+## 建模
+
+### 模型结构
+
+#### 净化函数 sinkFunc
+
+```
+{
+  "sink": {
+    "description": "净化函数模板"
+    "vector": []
+  }
+}
+```
+
+#### 易污染函数 taintedFunc
+
+```
+{
+  "exec": {
+    "description": "可能存在命令注入漏洞"
+    "vector": []
+  }
+}
+```
+
+#### 污染源函数 taintSource
+
+```
+{
+  "input": {
+    "description": "获取用户输入"
+    "vector": []
+  }
+}
+```
+
+### 建模对象
+
+- Python内置函数
+- Python Package
+- Python项目中的mudule/file
+
+### 自动建模
+
+#### 必要性：
+
+Python项目依赖的module可能非常多，超出扫描器内置模型的范围。Python现有Package数量之多也使得人工构建完备的模型数据库工作量极大。
+
+#### 可行性与局限性：
+
+- file-subCFG
+- package-subCFG
+
+在对内置函数充分建模的前提下，可以通过污点追踪技术本身对未知目标进行易污染函数和污染源函数的建模。对于净化函数则难以准确建模。
+
+## 污点追踪
+
 

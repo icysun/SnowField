@@ -82,7 +82,7 @@ class CFGBuilder(ast.NodeVisitor):
     a program's AST and iteratively build the corresponding CFG.
     """
 
-    def __init__(self, separate=False):
+    def __init__(self, separate=True):
         super().__init__()
         self.after_loop_block_stack = []
         self.curr_loop_guard_stack = []
@@ -171,9 +171,10 @@ class CFGBuilder(ast.NodeVisitor):
             statement: An AST node representing the statement that must be
                        added to the current block.
         """
+        # logStatement(statement)
         block.statements.append(statement)
 
-    def add_exit(self, block, nextblock, exitcase=None):
+    def add_exit(self, block, nextblock, exitcase=None, isLoopBack = False):
         """
         Add a new exit to a block.
 
@@ -183,7 +184,7 @@ class CFGBuilder(ast.NodeVisitor):
             exitcase: An AST node representing the 'case' (or condition)
                       leading to the exit from the block in the program.
         """
-        newlink = Link(block, nextblock, exitcase)
+        newlink = Link(block, nextblock, exitcase, isLoopBack)
         block.exits.append(newlink)
         nextblock.predecessors.append(newlink)
 
@@ -275,6 +276,7 @@ class CFGBuilder(ast.NodeVisitor):
             newblock = self.new_block()
             self.add_exit(self.current_block, newblock)
             self.current_block = newblock
+            #logStatement(node)
         self.generic_visit(node)
 
     def visit_Expr(self, node):
@@ -295,7 +297,7 @@ class CFGBuilder(ast.NodeVisitor):
             elif type(node) == ast.Subscript:
                 return node.value.id
 
-        def visit_finc_args(args):
+        def visit_func_args(args):
             for arg in args:
                 if type(arg) == ast.Constant:
                     pass
@@ -306,9 +308,9 @@ class CFGBuilder(ast.NodeVisitor):
             return 'builtin'
 
         func_name = visit_func(node.func)
-        func_args = list(visit_finc_args(node.args))
+        func_args = list(visit_func_args(node.args))
         modulePath = getModulePath()
-        self.current_block.func_calls[func_name] = {'args':func_args, 'funcId':modulePath + '/' + func_name}
+        self.current_block.predecessors[0].source.func_calls[func_name] = {'args':func_args, 'funcId':modulePath + '/' + func_name}
 
     def visit_Assign(self, node):
         self.add_statement(self.current_block, node)
@@ -399,7 +401,7 @@ class CFGBuilder(ast.NodeVisitor):
             self.visit(child)
         if not self.current_block.exits:
             # Did not encounter a break statement, loop back
-            self.add_exit(self.current_block, loop_guard)
+            self.add_exit(self.current_block, loop_guard, isLoopBack=True)
 
         # Continue building the CFG in the after-while block.
         self.current_block = afterwhile_block
@@ -410,6 +412,7 @@ class CFGBuilder(ast.NodeVisitor):
         loop_guard = self.new_loopguard()
         self.current_block = loop_guard
         self.add_statement(self.current_block, node)
+        #logStatement(node)
         self.curr_loop_guard_stack.append(loop_guard)
         # New block for the body of the for-loop.
         for_block = self.new_block()
@@ -426,7 +429,8 @@ class CFGBuilder(ast.NodeVisitor):
             self.visit(child)
         if not self.current_block.exits:
             # Did not encounter a break
-            self.add_exit(self.current_block, loop_guard)
+            self.add_exit(self.current_block, loop_guard, isLoopBack=True)
+            pass
 
         # Continue building the CFG in the after-for block.
         self.current_block = afterfor_block

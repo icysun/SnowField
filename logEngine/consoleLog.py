@@ -16,8 +16,8 @@ def logFuncCall(info : str):
 def logFuncImport(funcId : str, description : str):
     print("[*] {} Import function: {}, \"{}\"".format(getTime(), funcId, description))
 
-def logScanResult(description : str):
-    print("[*] {} 发现漏洞: {}".format(getTime(), description))
+def logScanResult(description : str, taintSource, taintedFunc):
+    print("[*] {} 发现漏洞: {}, [污染源: {}], [污染位置: {}]".format(getTime(), description, taintSource, taintedFunc))
 
 def logStatement(statement):
     print('-----------')
