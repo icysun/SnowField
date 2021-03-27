@@ -7,7 +7,7 @@
 ▀▄▄▄█▀ █   █  ▀█▄█▀   █ █   █      ▄▄█▄▄    ▀▄▄  ▀█▄▄▀  ▀█▄██  雪原：Python代码静态漏洞扫描器
 ```
 
-![image-20210327143459010](C:\Users\Acer\Desktop\SnowField\README.assets\image-20210327143459010.png)
+![image-20210327143459010](.\README.assets\image-20210327143459010.png)
 
 ## 扫描器结构设计
 
