@@ -36,6 +36,7 @@ class Scanner():
                     self.trace(block, func_call, block.func_calls[func_call]['args'])
                     for taintSource in self.scanCache:
                         logScanResult(self.taintedFuncs[func_call]['description'], str(taintSource), str(block))
+                    self.scanCache.clear()
 
     def trace(self, currentBlock: Block, func_call, args):
         for predecessor in currentBlock.predecessors:
@@ -53,6 +54,7 @@ class Scanner():
     def is_tainted_statement(self, statement, args):
         #logStatement(statement)
         if type(statement) == ast.Assign:
+            logStatement(statement)
             if statement.targets[0].id in args:
                 if type(statement.value) == ast.Call:
                     funcName = statement.value.func.id

@@ -1,6 +1,7 @@
 from testEngine.unitTest import unitTest
 from testEngine.funcTest import funcTest
 
+
 def banner():
     banner = """
   ▄▄▄▄                       ▄▄▄▄▄▄   ▀    ▀▀█               █ 
@@ -16,3 +17,4 @@ if __name__ == "__main__":
     banner()
     funcTest()
     unitTest(1)
+    unitTest(2)
