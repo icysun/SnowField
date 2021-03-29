@@ -1,5 +1,5 @@
 # 任意代码执行
 
-cmd, sql = input('cmd'), input('sql')
-exec(cmd)
-exec(sql)
+cmd1, cmd2 = input('cmd1'), input('cmd2')
+exec(cmd1)
+exec(cmd2)

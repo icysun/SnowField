@@ -1,5 +1,5 @@
 {
   "exec": {
-    "description": "命令注入漏洞"
+    "description": "代码注入"
   }
 }

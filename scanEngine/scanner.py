@@ -13,7 +13,7 @@ class Scanner():
         self.taintedFuncs = {}
         self.taintSources = {}
         self.sinkFuncs = {}
-        self.modulePath = ['builtin']
+        self.modulePath = ['builtin', 'os']
         self.scanCache = set()
 
     def scan(self):
@@ -27,7 +27,10 @@ class Scanner():
 
     def funcDataInit(self):
         for modulePath in self.modulePath:
-            self.taintedFuncs, self.taintSources, self.sinkFuncs = importFuncs(modulePath)
+            taintedFuncs, taintSources, sinkFuncs = importFuncs(modulePath)
+            self.taintedFuncs.update(taintedFuncs)
+            self.taintSources.update(taintSources)
+            self.sinkFuncs.update(sinkFuncs)
 
     def analyze(self, cfg):
         for block in cfg.__iter__():
