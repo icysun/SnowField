@@ -2,7 +2,8 @@ from cfgEngine import CFGBuilder, Block, Link, CFG
 from moduleEngine.importData import importFuncs
 from logEngine.consoleLog import logScanResult, logStatement, logProcess, logStatus
 import ast
-from scanEngine.statementJudge import is_tainted_statement
+from scanEngine.taintJudge import is_tainted_statement
+from scanEngine.sinkJudge import is_sink_statement
 
 class Scanner():
 
@@ -53,6 +54,8 @@ class Scanner():
             preBlock = predecessor.source
             statement = preBlock.statements[0]
             # logStatement(statement)
+            if is_sink_statement():
+                break
             if is_tainted_statement(self, statement, argName):
                 self.scanCache.add(preBlock)
             else:
