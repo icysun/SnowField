@@ -1,7 +1,8 @@
 from cfgEngine import CFGBuilder, Block, Link, CFG
 from moduleEngine.importData import importFuncs
-from logEngine.consoleLog import logScanResult, logStatement
+from logEngine.consoleLog import logScanResult, logStatement, logProcess, logStatus
 import ast
+from scanEngine.statementJudge import is_tainted_statement
 
 class Scanner():
 
@@ -33,12 +34,14 @@ class Scanner():
             for func_call in block.func_calls:
                 if func_call in self.taintedFuncs.keys():
                     #logStatement(block.statements[0])
-                    self.trace(block, func_call, block.func_calls[func_call]['args'])
-                    for taintSource in self.scanCache:
-                        logScanResult(self.taintedFuncs[func_call]['description'], str(taintSource), str(block))
-                    self.scanCache.clear()
+                    for argName in block.func_calls[func_call]['args']:
+                        logProcess("追踪函数: {}, 参数: {}".format(func_call, argName))
+                        self.trace(block, func_call, argName)
+                        for taintSource in self.scanCache:
+                            logScanResult(self.taintedFuncs[func_call]['description'], str(taintSource), str(block))
+                        self.scanCache.clear()
 
-    def trace(self, currentBlock: Block, func_call, args):
+    def trace(self, currentBlock: Block, func_call, argName):
         for predecessor in currentBlock.predecessors:
             if predecessor.isLoopBack == True:
                 continue
@@ -46,18 +49,8 @@ class Scanner():
                 predecessor.isLoopBack = True
             preBlock = predecessor.source
             statement = preBlock.statements[0]
-            if self.is_tainted_statement(statement, args):
+            # logStatement(statement)
+            if is_tainted_statement(self, statement, argName):
                 self.scanCache.add(preBlock)
             else:
-                self.trace(preBlock, func_call, args)
-
-    def is_tainted_statement(self, statement, args):
-        #logStatement(statement)
-        if type(statement) == ast.Assign:
-            logStatement(statement)
-            if statement.targets[0].id in args:
-                if type(statement.value) == ast.Call:
-                    funcName = statement.value.func.id
-                    if funcName in self.taintSources:
-                        return True
-        return False
+                self.trace(preBlock, func_call, argName)
