@@ -35,7 +35,7 @@ class Block(object):
 
     def __str__(self):
         if self.statements:
-            return "block{}@第{}行:{}".format(self.id, self.at(),self.get_source().replace('\n','\\n'))
+            return "block{}@第{}行:\n\t\t{}".format(self.id, self.at(),self.get_source())
         return "empty block:{}".format(self.id)
 
     def __repr__(self):
@@ -164,6 +164,8 @@ class CFG(object):
         self.finalblocks = []
         # Sub-CFGs for functions defined inside the current CFG.
         self.functioncfgs = {}
+        self.functions = []
+        self.modules = [{"modulePath" : "builtin", "moduleName" : ""}]
 
     def __str__(self):
         return "CFG for {}".format(self.name)

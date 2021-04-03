@@ -1,5 +1,5 @@
 from cfgEngine import CFGBuilder, Block, Link, CFG
-from moduleEngine.importData import importFuncs
+from moduleEngine.importData import importFunc, importModule
 from logEngine.consoleLog import logScanResult, logStatement, logProcess, logStatus
 import ast
 from scanEngine.taintJudge import is_tainted_statement
@@ -14,7 +14,6 @@ class Scanner():
         self.taintedFuncs = {}
         self.taintSources = {}
         self.sinkFuncs = {}
-        self.modulePath = ['builtin', 'os']
         self.scanCache = set()
 
     def scan(self):
@@ -23,15 +22,28 @@ class Scanner():
         self.analyze(self.cfg)
 
     def generateCFG(self):
-        self.cfg = CFGBuilder().build_from_src(self.name, self.code)
+        self.cfg= CFGBuilder().build_from_src(self.name, self.code)
         self.cfg.build_visual('./scanEngine/cfgGenerated/{}/{}'.format(self.name, self.name))
 
     def funcDataInit(self):
-        for modulePath in self.modulePath:
-            taintedFuncs, taintSources, sinkFuncs = importFuncs(modulePath)
-            self.taintedFuncs.update(taintedFuncs)
-            self.taintSources.update(taintSources)
-            self.sinkFuncs.update(sinkFuncs)
+        for function in self.cfg.functions:
+            funcData = importFunc(function["funcPath"])
+            functionName = function["funcName"]
+            if funcData['type'] == 'T':
+                self.taintedFuncs[functionName] = funcData
+            elif funcData['type'] == 'S':
+                self.sinkFuncs[functionName] = funcData
+            elif funcData['type'] == 'O':
+                self.taintSources[functionName] = funcData
+        for module in self.cfg.modules:
+            funcDataList = importModule(module["modulePath"], module["moduleName"])
+            for funcKeyData in funcDataList:
+                if funcKeyData[1]['type'] == 'T':
+                    self.taintedFuncs[funcKeyData[0]] = funcKeyData[1]
+                elif funcKeyData[1]['type'] == 'S':
+                    self.sinkFuncs[funcKeyData[0]] = funcKeyData[1]
+                elif funcKeyData[1]['type'] == 'O':
+                    self.taintSources[funcKeyData[0]] = funcKeyData[1]
 
     def analyze(self, cfg):
         for block in cfg.__iter__():

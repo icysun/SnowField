@@ -152,6 +152,10 @@ class CFGBuilder(ast.NodeVisitor):
             return self.build_from_src(name, src)
 
     # ---------- Graph management methods ---------- #
+    def generic_visit(self, node):
+        #logStatement(node)
+        super().generic_visit(node)
+
     def new_block(self):
         """
         Create a new block with a new id.
@@ -283,7 +287,18 @@ class CFGBuilder(ast.NodeVisitor):
         self.add_statement(self.current_block, node)
         self.goto_new_block(node)
 
+    def visit_func_args(self, args):
+        for arg in args:
+            if type(arg) == ast.Constant:
+                pass
+            elif type(arg) == ast.Name:
+                yield arg.id
+            elif type(arg) == ast.Call:
+                pass
+
+
     def visit_Call(self, node):
+        #logStatement(node)
         def visit_func(node):
             if type(node) == ast.Name:
                 return node.id
@@ -297,18 +312,11 @@ class CFGBuilder(ast.NodeVisitor):
             elif type(node) == ast.Subscript:
                 return node.value.id
 
-        def visit_func_args(args):
-            for arg in args:
-                if type(arg) == ast.Constant:
-                    pass
-                elif type(arg) == ast.Name:
-                    yield arg.id
-
         def getModulePath():
             return 'builtin'
 
         func_name = visit_func(node.func)
-        func_args = list(visit_func_args(node.args))
+        func_args = list(self.visit_func_args(node.args))
         modulePath = getModulePath()
         self.current_block.predecessors[0].source.func_calls[func_name] = {'args':func_args, 'funcId':modulePath + '/' + func_name}
 
@@ -448,9 +456,34 @@ class CFGBuilder(ast.NodeVisitor):
 
     def visit_Import(self, node):
         self.add_statement(self.current_block, node)
+        for module in node.names:
+            modulePath = module.name
+            if module.asname == None:
+                moduleName = module.name
+            else:
+                moduleName = module.asname
+            self.cfg.modules.append({
+                "modulePath": modulePath,
+                "moduleName": moduleName
+            })
+        #print(self.cfg.modules)
+        self.goto_new_block(node)
 
     def visit_ImportFrom(self, node):
         self.add_statement(self.current_block, node)
+        moduleName = node.module
+        funcNames = node.names
+        for funcName in funcNames:
+            funcPath = moduleName + ':' + funcName.name
+            if funcName.asname == None:
+                alias = funcName.name
+            else:
+                alias = funcName.asname
+            self.cfg.functions.append({
+                "funcPath": funcPath,
+                "funcName": alias
+            })
+        self.goto_new_block(node)
 
     def visit_FunctionDef(self, node):
         self.add_statement(self.current_block, node)

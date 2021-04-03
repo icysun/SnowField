@@ -16,4 +16,4 @@ def banner():
 if __name__ == "__main__":
     banner()
     funcTest()
-    unitTest(3)
+    unitTest(4)
