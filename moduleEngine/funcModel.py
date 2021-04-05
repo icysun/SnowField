@@ -28,6 +28,6 @@ class funcModel():
             }
         }
 
-        filePath = "./{}/{}.json".format(self.modelName, self.funcName)
+        filePath = "./modules/{}/{}.json".format(self.modelName, self.funcName)
         with open(filePath, "w") as file:
             json.dump(data, file, ensure_ascii= False)

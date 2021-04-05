@@ -2,12 +2,12 @@ import json
 from os import listdir
 
 def importFunc(funcPath):
-    path = './moduleEngine/' + funcPath.split(':')[0] + '/' + funcPath.split(':')[1] + '.json'
+    path = './moduleEngine/modules/' + funcPath.split(':')[0] + '/' + funcPath.split(':')[1] + '.json'
     data = open(path, 'r').read()
     return json.loads(data)[funcPath.split(':')[1]]
 
 def importModule(modulePath, moduleName):
-    path = './moduleEngine/' + modulePath
+    path = './moduleEngine/modules/' + modulePath
     functions = []
     for jsonFile in listdir(path):
         data = json.loads(open(path + '/' + jsonFile, 'r').read())

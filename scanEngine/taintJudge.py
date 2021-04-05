@@ -3,15 +3,22 @@ import ast
 
 def is_tainted_statement(scanner, statement, argName, preBlock):
 
+    def recursive_func_judge(funcNode):
+        funcName = funcNode.func.id
+        if funcName in scanner.taintSources:
+            return True
+        for arg in funcNode.args:
+            if type(arg) == ast.Name:
+                scanner.trace(preBlock, arg.id)
+            if type(arg) == ast.Call:
+                return recursive_func_judge(arg)
+
     def target_value_assign(target, value):
         if target.id == argName:
             if type(value) == ast.Call:
-                funcName = value.func.id
-                if funcName in scanner.taintSources:
+                if recursive_func_judge(value):
                     return True
-                for arg in value.args:
-                    if type(arg) == ast.Name:
-                        scanner.trace(preBlock, arg.id)
+
         return False
 
     if type(statement) == ast.Assign:

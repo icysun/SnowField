@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
-    <file url="file://$PROJECT_DIR$/moduleEngine/builtin/exec.json" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/moduleEngine/builtin/input.json" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/moduleEngine/builtin/sinkCmdInjection.json" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/moduleEngine/os/system.json" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/moduleEngine/modules/builtin/exec.json" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/moduleEngine/modules/builtin/input.json" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/moduleEngine/modules/builtin/sinkCmdInjection.json" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/moduleEngine/modules/os/system.json" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

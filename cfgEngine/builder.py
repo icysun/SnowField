@@ -10,7 +10,6 @@ from .model import Block, Link, CFG
 import sys
 from logEngine.consoleLog import logProcess, logStatus, logFuncCall, logStatement
 
-
 def is_py38_or_higher():
     if sys.version_info.major == 3 and sys.version_info.minor >= 8:
         return True
@@ -305,7 +304,10 @@ class CFGBuilder(ast.NodeVisitor):
             elif type(node) == ast.Attribute:
                 # Recursion on series of calls to attributes.
                 func_name = visit_func(node.value)
-                func_name += "." + node.attr
+                if type(node.value) == NAMECONSTANT_TYPE:
+                    func_name = node.attr
+                else:
+                    func_name += "." + node.attr
                 return func_name
             elif type(node) == ast.Str:
                 return node.s
@@ -482,11 +484,11 @@ class CFGBuilder(ast.NodeVisitor):
         self.goto_new_block(node)
 
     def visit_FunctionDef(self, node):
-        self.add_statement(self.current_block, node)
+        # self.add_statement(self.current_block, node)
         self.new_functionCFG(node, asynchr=False)
 
     def visit_AsyncFunctionDef(self, node):
-        self.add_statement(self.current_block, node)
+        # self.add_statement(self.current_block, node)
         self.new_functionCFG(node, asynchr=True)
 
     def visit_Await(self, node):
