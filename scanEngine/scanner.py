@@ -1,6 +1,6 @@
 from cfgEngine import CFGBuilder, Block, Link, CFG
 from moduleEngine.importData import importFunc, importModule
-from logEngine.consoleLog import logScanResult, logStatement, logProcess, logStatus
+from logEngine.consoleLog import logScanResult, logStatement, logProcess, logStatus, logError
 import ast
 from scanEngine.taintJudge import is_tainted_statement
 from scanEngine.sinkJudge import is_sink_statement
@@ -28,6 +28,8 @@ class Scanner():
     def funcDataInit(self):
         for function in self.cfg.functions:
             funcData = importFunc(function["funcPath"])
+            if funcData == None:
+                continue
             functionName = function["funcName"]
             if funcData['type'] == 'T':
                 self.taintedFuncs[functionName] = funcData

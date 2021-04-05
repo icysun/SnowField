@@ -1,5 +1,6 @@
 import time
 from astpretty import pprint
+import os
 
 def getTime():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -22,3 +23,7 @@ def logScanResult(description : str, taintSource, taintedFunc):
 def logStatement(statement):
     print('-----------')
     pprint(statement)
+
+def logError(warning):
+    print('[#] 错误: {}'.format(warning))
+    os._exit(0)

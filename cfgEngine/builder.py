@@ -8,7 +8,8 @@ Control flow graph builder.
 import ast
 from .model import Block, Link, CFG
 import sys
-from logEngine.consoleLog import logProcess, logStatus, logFuncCall, logStatement
+from logEngine.consoleLog import logProcess, logStatus, logFuncCall, logStatement, logError
+from moduleEngine.dataStorage import moduleNames
 
 def is_py38_or_higher():
     if sys.version_info.major == 3 and sys.version_info.minor >= 8:
@@ -87,6 +88,7 @@ class CFGBuilder(ast.NodeVisitor):
         self.curr_loop_guard_stack = []
         self.current_block = None
         self.separate_node_blocks = separate
+        self.moduleNames = moduleNames()
 
     # ---------- CFG building methods ---------- #
     def build(self, name, tree, asynchr=False, entry_id=0):
@@ -456,6 +458,8 @@ class CFGBuilder(ast.NodeVisitor):
         self.add_statement(self.current_block, node)
         for module in node.names:
             modulePath = module.name
+            if modulePath not in self.moduleNames:
+                logError("Module {} 未建模".format(modulePath))
             if module.asname == None:
                 moduleName = module.name
             else:
@@ -470,6 +474,8 @@ class CFGBuilder(ast.NodeVisitor):
     def visit_ImportFrom(self, node):
         self.add_statement(self.current_block, node)
         moduleName = node.module
+        if moduleName not in self.moduleNames:
+            logError("Module {} 未建模".format(moduleName))
         funcNames = node.names
         for funcName in funcNames:
             funcPath = moduleName + ':' + funcName.name
