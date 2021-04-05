@@ -52,12 +52,12 @@ class Scanner():
                     #logStatement(block.statements[0])
                     for argName in block.func_calls[func_call]['args']:
                         logProcess("追踪函数: {}, 参数: {}".format(func_call, argName))
-                        self.trace(block, func_call, argName)
+                        self.trace(block, argName)
                         for taintSource in self.scanCache:
                             logScanResult(self.taintedFuncs[func_call]['description'], str(taintSource), str(block))
                         self.scanCache.clear()
 
-    def trace(self, currentBlock: Block, func_call, argName):
+    def trace(self, currentBlock: Block, argName):
         for predecessor in currentBlock.predecessors:
             if predecessor.isLoopBack == True:
                 continue
@@ -68,7 +68,7 @@ class Scanner():
             # logStatement(statement)
             if is_sink_statement():
                 break
-            if is_tainted_statement(self, statement, argName):
+            if is_tainted_statement(self,statement, argName, preBlock):
                 self.scanCache.add(preBlock)
             else:
-                self.trace(preBlock, func_call, argName)
+                self.trace(preBlock, argName)

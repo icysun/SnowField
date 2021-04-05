@@ -1,7 +1,7 @@
 from logEngine.consoleLog import logStatement
 import ast
 
-def is_tainted_statement(scanner, statement, argName):
+def is_tainted_statement(scanner, statement, argName, preBlock):
 
     def target_value_assign(target, value):
         if target.id == argName:
@@ -9,6 +9,9 @@ def is_tainted_statement(scanner, statement, argName):
                 funcName = value.func.id
                 if funcName in scanner.taintSources:
                     return True
+                for arg in value.args:
+                    if type(arg) == ast.Name:
+                        scanner.trace(preBlock, arg.id)
         return False
 
     if type(statement) == ast.Assign:

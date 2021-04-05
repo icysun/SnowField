@@ -294,7 +294,7 @@ class CFGBuilder(ast.NodeVisitor):
             elif type(arg) == ast.Name:
                 yield arg.id
             elif type(arg) == ast.Call:
-                pass
+                self.visit_Call(arg)
 
 
     def visit_Call(self, node):
@@ -312,13 +312,9 @@ class CFGBuilder(ast.NodeVisitor):
             elif type(node) == ast.Subscript:
                 return node.value.id
 
-        def getModulePath():
-            return 'builtin'
-
         func_name = visit_func(node.func)
         func_args = list(self.visit_func_args(node.args))
-        modulePath = getModulePath()
-        self.current_block.predecessors[0].source.func_calls[func_name] = {'args':func_args, 'funcId':modulePath + '/' + func_name}
+        self.current_block.predecessors[0].source.func_calls[func_name] = {'args':func_args}
 
     def visit_Assign(self, node):
         self.add_statement(self.current_block, node)
