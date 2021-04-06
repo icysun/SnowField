@@ -1,10 +1,8 @@
 # 基于污点追踪技术的<br>python 代码静态漏洞扫描技术研究
 
-<script>var newEl = document.querySelector('#readme > div.d-flex.flex-items-center.flex-justify-between.color-bg-primary.js-sticky.js-position-sticky.top-0.border-bottom.border-top-0.rounded-top-2.p-2.is-stuck > div.d-flex.flex-items-center > details > details-menu > div > div').cloneNode(true);console.log(newEl);</script>
-
 ## 摘要
 
-文章概要与文章结构
+文章概要与文章结构<img src=x onerror=alert(1)>
 
 ## 1. 研究背景及意义
 
